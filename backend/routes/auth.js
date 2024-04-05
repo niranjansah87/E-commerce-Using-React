@@ -55,7 +55,7 @@ router.post(
       };
 
       const authToken = jwt.sign(data, JWT_SECRET);
-      console.log(authToken);
+      // console.log(authToken);
       res.json({ authToken });
     } catch (error) {
       console.error(error);
@@ -100,7 +100,7 @@ router.post(
       const authToken = jwt.sign(data, JWT_SECRET,{
         expiresIn: '1h', // Token expiration time
       });
-      console.log(authToken);
+      // console.log(authToken);
       // res.status(200).json({ authToken, role: user.role });
       res.json({ authToken });
     } catch (error) {
