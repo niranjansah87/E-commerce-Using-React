@@ -13,7 +13,7 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 
 //Route 1: Create a User using POST "api/auth/signup". No login required
-router.post(
+router.post( 
   "/signup",
   [
     body("name", "Enter a valid name").isLength({ min: 3 }),
