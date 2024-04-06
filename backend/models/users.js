@@ -1,5 +1,6 @@
 
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 const userSchema = new mongoose.Schema(
   {
    
@@ -11,9 +12,13 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      trim: true,
       unique: true,
       required: true,
+    },
+    gender: {
+      type: String,
+      required: [true, "Please Enter Gender"]
+
     },
     contact: {
       type: Number,
@@ -23,16 +28,32 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    isAdmin: {
-      type: Boolean,
-      default: false,
-    },
+    avatar: {
+      public_id: {
+          type: String,
+      },
+      url: {
+          type: String,
+      }
+  },
+  role: {
+      type: String,
+      default: "user",
+  },
     date: {
       type: Date,
       default: Date.now,
     },
   },
 );
-
+// Method to compare passwords
+userSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 const User = mongoose.model("User", userSchema);
 module.exports = User;
+
+
+
+
+

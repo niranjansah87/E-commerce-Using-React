@@ -6,7 +6,9 @@ const bcrypt = require("bcryptjs");
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const { urlencoded } = require("body-parser");
-const JWT_SECRET = "Niranjan";
+require('dotenv').config({ path: './backend/config/.env' });
+
+const JWT_SECRET = 'Niranjan';
 var nodemailer = require('nodemailer');
 const app = express();
 app.set("view engine", "ejs");
@@ -55,7 +57,7 @@ router.post(
       };
 
       const authToken = jwt.sign(data, JWT_SECRET);
-      // console.log(authToken);
+      console.log(authToken);
       res.json({ authToken });
     } catch (error) {
       console.error(error);
@@ -156,7 +158,7 @@ router.post("/forgotpassword", async (req, res) => {
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'sahn0075@gmail.com',
+          user: 'sahn0075@gmail.com' ,
           pass: 'mxbp cawe hctu pwzm'
         }
       });
@@ -246,8 +248,47 @@ router.post('/resetpassword/:id/:token', async (req, res) => {
 
 );
 
+//Route 9:Get Users Details
+router.get("/me", async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
 
+    res.status(200).json({
+        success: true,
+        user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
+//Route 10:Change Password using POST "/api/auth/changepassword". Login required
+router.post("/changepassword", fetchuser, async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const user = await User.findById(req.user.id);
+
+    // Check if the provided old password matches the user's current password
+    const isPasswordMatched = await user.comparePassword(oldPassword);
+    if (!isPasswordMatched) {
+      // If old password does not match, return a 400 status with a message
+      return res.status(400).json({ message: "Old Password is Invalid" });
+    }
+
+    // Update user's password with the new password
+    user.password = newPassword;
+    await user.save();
+
+    // Manually generate a token and send it back to the client
+    res.json({ message: 'Password Change successful' });
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error(error);
+    // Send a generic 500 status with a message for any unexpected errors
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
 
 module.exports = router;

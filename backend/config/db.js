@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const mongoURI="mongodb://localhost:27017/E_Commerce";
+require('dotenv').config({ path: './backend/config/.env' });
+
+const mongoURI = 'mongodb://localhost:27017/E_Commerce';
 
 const connectToMongoose = async () => {
     try {
@@ -9,8 +11,7 @@ const connectToMongoose = async () => {
         });
         console.log("Connected to MongoDB");
     } catch (err) {
-
-        console.error('Error connecting to MongoDB:', error);
+        console.error('Error connecting to MongoDB:', err);
     }
 };
 
