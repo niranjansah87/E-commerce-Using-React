@@ -17,7 +17,7 @@ app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 // Available routes
 app.use('/api/auth', require('./routes/auth'));
-// app.use('/admin', require('./routes/admin'));
+// app.use('/api/product', require('./routes/product'));
 
 // Start the server
 const server = app.listen(port, () => {
